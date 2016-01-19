@@ -9,4 +9,26 @@ function Get-DotNetVersion
     Sort-Object -Property Version -Descending |
     Format-Table -AutoSize
 }
+
+function Test-Domain
+{
+[CmdletBinding()]
+    param
+    ([parameter(Position=0,
+       Mandatory=$true,
+       ValueFromPipeline=$true,
+       ValueFromPipelineByPropertyName=$true)]
+       [string]$ComputerName='.'
+    )
+BEGIN{}
+PROCESS
+{
+    Write-Host 'Domain or workgroup Membership' -ForegroundColor Green
+    Get-WmiObject -Class Win32_ComputerSystem -Computername $ComputerName |
+    Select-Object -Property Name, Domain | Format-Table -AutoSize
+}
+END{}
+    
+}
 Get-DotNetVersion
+Test-Domain -ComputerName 'localhost'
